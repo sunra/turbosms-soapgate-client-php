@@ -1,5 +1,6 @@
 {
     "name": "sunra/turbosms-soapgate-client-php",
+    "version": "0.1.0",
     "type": "library",
     "description": "Client library for connect to soap gate of TurboSMS.ua",
     "keywords": ["sms","gate","soap"],
@@ -13,9 +14,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "lib-iconv": "*",
+        "ext-soap": "*"
     },    
     "autoload": {
-        "psr-0": {"": "lib/"}
+        "psr-0": {"Turbosms": "src/"}
     }
 }
