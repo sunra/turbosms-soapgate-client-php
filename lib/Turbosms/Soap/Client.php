@@ -107,7 +107,7 @@ class Client {
 		
 		$sms = Array ( 
         	'sender' => $this->sender, 
-        	'destination' => $phone/*'+380675384547,+380985419798,'*/, 
+        	'destination' => $phone, 
         	'text' => $this->conv_to_gate($text)/*,
 			'wappush' => 'http://realt5000.com.ua'*/
     	); 
