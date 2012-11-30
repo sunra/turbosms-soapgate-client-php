@@ -10,7 +10,9 @@
  * Required: SOAP, iconv
  * All communication with gate goes in UTF-8
  *
- * @version Version 0.1
+ * First must register on turbosms.ua and get login, password to gate and sender string
+ *
+ * @version Version 0.4
  */ 
 
 
@@ -28,7 +30,7 @@ class Client {
 	const gate_encoding = 'utf-8';
 	
 	private $client_encoding = 'windows-1251';
-	private $sender = 'phpSoapCli';
+	private $sender = 'SoapClient';
 	
 	private $client;
 	public $connected = false;
@@ -40,18 +42,18 @@ class Client {
 	/***
 	* 
 	**/
-	function __construct( $login, $pass, $sender, $client_encoding ) {
+	function __construct( $login, $pass, $sender='', $client_encoding='' ) {
 		
 		if (!function_exists('iconv')) {
-			throw new Exception('ICONV not installed (http://www.php.net/manual/en/iconv.requirements.php)');
+			throw new \Exception('ICONV not installed (http://www.php.net/manual/en/iconv.requirements.php)');
 		}
 
 		if (!class_exists('SoapClient')) {
-			throw new Exception('SOAP not installed (http://www.php.net/manual/en/soap.installation.php)');
+			throw new \Exception('SOAP not installed (http://www.php.net/manual/en/soap.installation.php)');
 		}
 		
 		$this->auth_arr['login'] = $login;
-		$this->auth_arr['password'] = $login;		
+		$this->auth_arr['password'] = $pass;		
 		
 		if ($sender) $this->sender = $sender;
 		if ($client_encoding) $this->client_encoding = $client_encoding;		
@@ -61,32 +63,32 @@ class Client {
 	
 	
 
-	function connect() {
+	private function connect() {
 		
 		if ($this->connected) return true;
 		
-		$this->client = new SoapClient ( self::soap_gate );
+		$this->client = new \SoapClient ( self::soap_gate );
 				
-		if (!$this->client) throw new Exception('Cannot create new Soap client to '.self::soap_gate);				
+		if (!$this->client) throw new \Exception('Cannot create new Soap client to '.self::soap_gate);				
 		
-		$this->client->Auth ($this->auth_arr);				
+		$result = $this->client->Auth ($this->auth_arr);				
 		
 		$this->result_text = $this->conv_to_client($result->AuthResult);
 		
 		$this->connected = $result->AuthResult == 'Вы успешно авторизировались';
 		
-		if (!$this->connected) throw new Exception('Failed to Auth on Gate: '.$this->result_text);
+		if (!$this->connected) throw new \Exception('Failed to Auth on Gate: '.$this->result_text);
 		
 		return $this->connected;
 	}
 	
 	
-	function conv_to_client( $text ) {
+	private function conv_to_client( $text ) {
 		return iconv ( self::gate_encoding, $this->client_encoding, $text ); 
 	}
 
 
-	function conv_to_gate( $text ) {
+	private function conv_to_gate( $text ) {
 		return iconv ( $this->client_encoding, self::gate_encoding, $text ); 
 	}	
 
@@ -122,7 +124,7 @@ class Client {
 			return true;			    
 		} else {
 			$this->sms_id = null;
-			throw new Exception('Failed to send sms throw soap gate: '. $this->result_text);
+			throw new \Exception('Failed to send sms throw soap gate: '. $this->result_text. ' (details: http://turbosms.ua/soap.html)');
 		}
 		
 	}	
