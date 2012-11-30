@@ -4,13 +4,13 @@
     "type": "library",
     "description": "Client library for connect to soap gate of TurboSMS.ua",
     "keywords": ["sms","gate","soap"],
-    "homepage": "https://github.com/sunra/turbosms-soapgate-client-php",
-    "license": "",
+    "homepage": "http://github.com/sunra/turbosms-soapgate-client-php",
+    "license": "MIT",
     "authors": [
         {
-            "name": "Sunra",
+            "name": "sunra",
             "email": "sunra@yandex.ru",
-            "homepage": "http://clorophilla.net"
+            "homepage": "http://github.com/sunra"
         }
     ],
     "require": {
